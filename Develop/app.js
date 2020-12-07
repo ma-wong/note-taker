@@ -57,11 +57,15 @@ app.delete('/api/notes/:id', (req, res) => {
   // get note id from request body
 
   // read database file
-  let notes = getNote();
+  let notes = getNotes();
 
   // remove id
 
   // write database file to same location
+  fs.appendFile('db/db.json', newData, (err) => {
+    if (err) throw err;
+    console.log('Note successfully deleted');
+  });
 });
 
 app.listen(port, () => {
