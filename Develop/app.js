@@ -5,6 +5,8 @@ const path = require('path');
 const app = express();
 const port = 8080;
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 // APIs
 //
 // path.join api
@@ -12,6 +14,8 @@ const port = 8080;
 //
 // express api
 // https://expressjs.com/en/api.html
+
+const storedNotes = getNotes();
 
 function getNotes() {
   // read file into javascript object using fs
@@ -27,7 +31,7 @@ app.get('/notes', (req, res) => {
 
 app.get('/api/notes', (req, res) => {
   /// return file contents as json.
-  res.json(getNotes());
+  res.json(storedNotes);
 });
 
 // localhost:8080/notes returns index.html
@@ -38,33 +42,32 @@ app.get('*', (req, res) => {
 app.post('/api/notes', (req, res) => {
   // parse new note from POST request body
   let newNote = req.body;
- 
-  // read notes from local database
-  let notes = getNotes();
 
   // add new note from above to notes.
+  storedNotes.push(newNote);
+  res.json(true);
   
   // write new javascript object to file
-  fs.appendFile('db/db.json', newNote, (err) => {
+  fs.appendFile('db/db.json', storedNotes, (err) => {
     if (err) throw err;
     console.log('Note successfully added');
   });
 });
 
-app.delete('/api/notes/:id', (req, res) => {
-  // get note id from request body
+// app.delete('/api/notes/:id', (req, res) => {
+//   // get note id from request body
 
-  // read database file
-  let notes = getNotes();
+//   // read database file
+//   let notes = getNotes();
 
-  // remove id
+//   // remove id
 
-  // write database file to same location
-  fs.appendFile('db/db.json', newData, (err) => {
-    if (err) throw err;
-    console.log('Note successfully deleted');
-  });
-});
+//   // write database file to same location
+//   fs.appendFile('db/db.json', newData, (err) => {
+//     if (err) throw err;
+//     console.log('Note successfully deleted');
+//   });
+// });
 
 app.listen(port, () => {
     console.log(`Notetaking app is running at http:://localhost:${port}`);
