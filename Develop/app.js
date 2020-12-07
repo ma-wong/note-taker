@@ -3,9 +3,9 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const port = 42069;
+const port = 8080;
 
-// Useful APIs
+// APIs
 //
 // path.join api
 // https://nodejs.org/api/path.html#path_path_join_paths
@@ -20,9 +20,8 @@ function getNotes() {
   return JSON.parse(notesFileContents);
 }
 
-// localhost:42069/notes returns notes.html
+// localhost:8080/notes returns notes.html
 app.get('/notes', (req, res) => {
-  // __dirname resolves to your project folder...
   res.sendFile(path.join(__dirname, 'public/notes.html'));
 });
 
@@ -31,7 +30,7 @@ app.get('/api/notes', (req, res) => {
   res.json(getNotes());
 });
 
-// localhost:42069/notes returns index.html
+// localhost:8080/notes returns index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
@@ -40,11 +39,10 @@ app.post('/api/notes', (req, res) => {
   // parse new note from POST request body
   let newNote = req.body;
  
-  // read your notes from your local database
+  // read notes from local database
   let notes = getNotes();
 
-  // add your new note from above to notes.
-  // HINT you'll need to generate a new id.
+  // add new note from above to notes.
   
   // write new javascript object to file
   fs.appendFile('db/db.json', newNote, (err) => {
